@@ -67,7 +67,7 @@ async function joinRoom(): Promise<void> {
 
 <template>
   <div class="home">
-    <div class="panel card-box">
+    <div class="panel card-box rise-in">
       <h1>Yaniv</h1>
       <p class="tagline">Create a private room or join with a code.</p>
 
@@ -145,7 +145,20 @@ async function joinRoom(): Promise<void> {
 
 h1 {
   margin: 0;
-  font-size: 2rem;
+  font-size: 3rem;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--table-deep);
+}
+
+h1::after {
+  content: '';
+  display: block;
+  width: 3.2rem;
+  height: 4px;
+  margin-top: 0.5rem;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--gold));
 }
 
 .tagline {

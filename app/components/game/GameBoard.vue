@@ -77,7 +77,9 @@ function pickPacketCard(cardId: string): void {
     </header>
 
     <main class="table-center">
-      <p class="turn-message" role="status">{{ currentTurnName }}</p>
+      <Transition name="turn-swap" mode="out-in">
+        <p :key="currentTurnName" class="turn-message" role="status">{{ currentTurnName }}</p>
+      </Transition>
       <div class="piles">
         <div class="pile">
           <span class="pile-label">Deck</span>
@@ -160,8 +162,26 @@ function pickPacketCard(cardId: string): void {
 
 .turn-message {
   color: var(--panel);
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.15rem;
   margin: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+.turn-swap-enter-active,
+.turn-swap-leave-active {
+  transition: opacity 180ms ease, transform 180ms var(--ease-pop);
+}
+
+.turn-swap-enter-from {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.turn-swap-leave-to {
+  opacity: 0;
+  transform: translateY(-6px);
 }
 
 .piles {
@@ -185,14 +205,23 @@ function pickPacketCard(cardId: string): void {
 }
 
 .deck-back {
+  position: relative;
   width: 3.4rem;
   height: 4.8rem;
   border-radius: var(--radius-card);
-  background: repeating-linear-gradient(45deg, #4a6f8a, #4a6f8a 5px, #3e5f77 5px, #3e5f77 10px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  background:
+    radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.14) 0%, transparent 55%),
+    repeating-linear-gradient(45deg, #46586e 0, #46586e 4px, #3a4c61 4px, #3a4c61 8px);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow:
+    2px 2px 0 -1px #2f4054,
+    3px 3px 0 -1px rgba(255, 255, 255, 0.35),
+    5px 5px 0 -2px #2a3a4d,
+    var(--shadow);
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform 160ms var(--ease-pop);
 }
 
 .deck-count {
@@ -204,7 +233,9 @@ function pickPacketCard(cardId: string): void {
 }
 
 .own-area {
-  background: var(--table-deep);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0) 30%), var(--table-deep);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 6px rgba(0, 0, 0, 0.25);
   border-radius: var(--radius);
   padding: 0.7rem;
   display: flex;

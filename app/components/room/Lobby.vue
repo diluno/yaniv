@@ -35,7 +35,7 @@ const seats = computed(() => {
 
 <template>
   <div class="lobby">
-    <div class="panel inner">
+    <div class="panel inner rise-in">
       <h1>Room <span class="code">{{ snapshot.roomCode }}</span></h1>
       <button type="button" class="btn btn-secondary" @click="share">
         {{ copied ? 'Link copied!' : 'Share invite link' }}
@@ -101,10 +101,12 @@ h1 {
 
 .code {
   font-family: ui-monospace, monospace;
-  letter-spacing: 0.15em;
-  background: var(--panel-soft);
+  letter-spacing: 0.18em;
+  background: linear-gradient(180deg, #fff 0%, var(--panel-soft) 100%);
+  border: 1px solid rgba(120, 100, 60, 0.25);
   border-radius: 8px;
-  padding: 0.15rem 0.5rem;
+  padding: 0.15rem 0.55rem;
+  box-shadow: inset 0 1px 2px rgba(120, 100, 60, 0.12);
 }
 
 .players {
@@ -123,6 +125,7 @@ h1 {
   background: var(--panel-soft);
   border-radius: var(--radius);
   padding: 0.55rem 0.75rem;
+  animation: rise-in 320ms var(--ease-pop) both;
 }
 
 .player.empty {

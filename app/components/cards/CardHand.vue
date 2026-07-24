@@ -13,11 +13,12 @@ defineEmits<{ toggle: [cardId: string] }>()
 <template>
   <div class="hand" role="group" aria-label="Your hand">
     <CardsPlayingCard
-      v-for="card in cards"
+      v-for="(card, i) in cards"
       :key="card.id"
       :card="card"
       :selected="selectedIds.includes(card.id)"
       :interactive="interactive"
+      :style="{ '--deal-i': i }"
       @toggle="$emit('toggle', card.id)"
     />
   </div>

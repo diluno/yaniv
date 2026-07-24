@@ -41,7 +41,7 @@ const winnerName = computed(() =>
         </h2>
 
         <ul class="entries">
-          <li v-for="entry in result.entries" :key="entry.playerId" class="entry">
+          <li v-for="(entry, i) in result.entries" :key="entry.playerId" class="entry" :style="{ '--entry-i': i }">
             <div class="entry-head">
               <strong>{{ playerName(entry.playerId) }}</strong>
               <span class="points">
@@ -92,7 +92,9 @@ const winnerName = computed(() =>
 .sheet-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(20, 30, 25, 0.55);
+  background: rgba(16, 26, 21, 0.6);
+  backdrop-filter: blur(3px);
+  animation: backdrop-in 250ms ease both;
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -100,6 +102,7 @@ const winnerName = computed(() =>
 }
 
 .sheet {
+  animation: sheet-up 420ms var(--ease-pop) both;
   width: 100%;
   max-width: 480px;
   max-height: 88vh;
@@ -122,7 +125,42 @@ const winnerName = computed(() =>
 
 h2 {
   margin: 0;
-  font-size: 1.4rem;
+  font-size: 2rem;
+  font-family: var(--font-display);
+  font-weight: 900;
+  animation: title-pop 500ms var(--ease-pop) 150ms both;
+}
+
+@keyframes backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes sheet-up {
+  from {
+    opacity: 0;
+    transform: translateY(2.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes title-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.7) rotate(-3deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
+
+.entry {
+  animation: rise-in 380ms var(--ease-pop) both;
+  animation-delay: calc(var(--entry-i, 0) * 90ms + 200ms);
 }
 
 .sub {

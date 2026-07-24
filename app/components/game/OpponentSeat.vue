@@ -35,6 +35,7 @@ defineProps<{
 
 <style scoped>
 .seat {
+  transition: border-color 200ms ease, background-color 200ms ease;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: var(--radius);
@@ -44,8 +45,9 @@ defineProps<{
 }
 
 .seat.turn {
-  border-color: var(--accent);
-  background: rgba(201, 111, 59, 0.22);
+  border-color: var(--gold);
+  background: rgba(217, 179, 106, 0.16);
+  animation: glow-pulse 2s ease-in-out infinite;
 }
 
 .seat.out {
@@ -103,7 +105,8 @@ defineProps<{
 .turn-marker {
   display: block;
   font-size: 0.72rem;
-  color: #ffd9bd;
+  color: var(--gold);
   margin-top: 0.15rem;
+  animation: rise-in 240ms var(--ease-pop) both;
 }
 </style>

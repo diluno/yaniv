@@ -59,7 +59,8 @@ const accessibleName = computed(() => {
   width: 3.4rem;
   height: 4.8rem;
   flex: 0 0 auto;
-  background: var(--panel);
+  background:
+    linear-gradient(160deg, #fffdf6 0%, var(--panel) 55%, #f2ecdd 100%);
   border: 1px solid #d6d0c2;
   border-radius: var(--radius-card);
   box-shadow: var(--shadow);
@@ -68,7 +69,17 @@ const accessibleName = computed(() => {
   align-items: center;
   justify-content: center;
   padding: 0;
-  transition: transform 120ms ease;
+  transition:
+    transform 180ms var(--ease-pop),
+    box-shadow 180ms ease,
+    border-color 180ms ease;
+  animation: deal-in 360ms var(--ease-pop) both;
+  animation-delay: calc(var(--deal-i, 0) * 55ms);
+}
+
+.card.interactive:hover {
+  transform: translateY(-0.25rem);
+  box-shadow: 0 4px 10px rgba(10, 24, 17, 0.28);
 }
 
 .card.small {
@@ -84,10 +95,11 @@ const accessibleName = computed(() => {
   cursor: pointer;
 }
 
-.card.selected {
-  transform: translateY(-0.6rem);
+.card.selected,
+.card.interactive.selected:hover {
+  transform: translateY(-0.7rem) rotate(-2deg);
   border-color: var(--accent);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 8px 16px rgba(10, 24, 17, 0.32);
 }
 
 .corner {
