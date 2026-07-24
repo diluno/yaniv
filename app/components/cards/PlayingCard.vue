@@ -28,9 +28,12 @@ const RANK_NAMES: Record<string, string> = {
   A: 'Ace', J: 'Jack', Q: 'Queen', K: 'King', JOKER: 'Joker',
 }
 
-const isRed = computed(() => props.card.suit === 'hearts' || props.card.suit === 'diamonds')
+const isJoker = computed(() => props.card.rank === 'JOKER')
+// The two jokers mirror the red/black pairing of a physical deck.
+const isRed = computed(() =>
+  props.card.suit === 'hearts' || props.card.suit === 'diamonds' || props.card.id === 'joker-1')
 const symbol = computed(() => (props.card.suit ? SUIT_SYMBOLS[props.card.suit] : '★'))
-const rankLabel = computed(() => (props.card.rank === 'JOKER' ? '🃏' : props.card.rank))
+const rankLabel = computed(() => props.card.rank)
 const accessibleName = computed(() => {
   const rank = RANK_NAMES[props.card.rank] ?? props.card.rank
   const name = props.card.suit ? `${rank} of ${SUIT_NAMES[props.card.suit]}` : rank
@@ -48,8 +51,17 @@ const accessibleName = computed(() => {
     :aria-label="accessibleName"
     @click="interactive && $emit('toggle')"
   >
-    <span class="corner" aria-hidden="true">{{ rankLabel }}<br>{{ symbol }}</span>
-    <span class="pip" aria-hidden="true">{{ symbol }}</span>
+    <template v-if="isJoker">
+      <span class="corner" aria-hidden="true">★</span>
+      <span class="joker-face" aria-hidden="true">
+        <span class="joker-star">★</span>
+        <span class="joker-word">JOKER</span>
+      </span>
+    </template>
+    <template v-else>
+      <span class="corner" aria-hidden="true">{{ rankLabel }}<br>{{ symbol }}</span>
+      <span class="pip" aria-hidden="true">{{ symbol }}</span>
+    </template>
   </component>
 </template>
 
@@ -123,5 +135,33 @@ const accessibleName = computed(() => {
 
 .small .pip {
   font-size: 1.1rem;
+}
+
+.joker-face {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.05rem;
+  margin-top: 0.55rem;
+}
+
+.joker-star {
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.joker-word {
+  font-size: 0.42rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
+}
+
+.small .joker-star {
+  font-size: 1rem;
+}
+
+.small .joker-word {
+  font-size: 0.36rem;
 }
 </style>
