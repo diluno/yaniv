@@ -32,7 +32,7 @@
     "@vitest/coverage-v8": "^4.1.10",
     "crossws": "^0.4.10",
     "playwright": "^1.61.1",
-    "typescript": "^7.0.2",
+    "typescript": "^5.9.3",
     "vitest": "^4.1.10"
   },
   "private": true,
