@@ -19,13 +19,16 @@
   "type": "module",
   "dependencies": {
     "@upstash/redis": "^1.38.0",
+    "@vercel/functions": "^3.7.5",
     "ioredis": "^5.11.1",
     "nuxt": "^4.5.0",
     "vue": "^3.5.40",
+    "ws": "^8.21.1",
     "zod": "^4.4.3"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.1",
+    "@types/ws": "^8.18.1",
     "@vitest/coverage-v8": "^4.1.10",
     "crossws": "^0.4.10",
     "playwright": "^1.61.1",
