@@ -1,6 +1,6 @@
 import { computed, ref, watch, type Ref } from 'vue'
-import type { Card } from '../../shared/game/cards'
-import { autoOrderRun, classifyDiscard } from '../../shared/game/discard-validation'
+import type { Card } from '#shared/game/cards'
+import { autoOrderRun, classifyDiscard } from '#shared/game/discard-validation'
 
 /** Client-side selection + ordering. Feedback only; the server re-validates. */
 export function useCardSelection(hand: Ref<Card[]>) {

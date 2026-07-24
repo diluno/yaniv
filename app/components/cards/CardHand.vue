@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Card } from '../../../shared/game/cards'
+import type { Card } from '#shared/game/cards'
 
 defineProps<{
   cards: Card[]

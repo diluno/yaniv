@@ -1,6 +1,11 @@
 <script setup lang="ts">
-import type { Card } from '../../../shared/game/cards'
-import type { DiscardClassification } from '../../../shared/game/discard-validation'
+import type { Card } from '#shared/game/cards'
+
+type DiscardClassification =
+  | { kind: 'single' }
+  | { kind: 'set' }
+  | { kind: 'run' }
+  | { kind: 'invalid', reason: string }
 
 const props = defineProps<{
   selectedCards: Card[]

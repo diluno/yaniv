@@ -8,7 +8,7 @@ import { logEvent } from '../../utils/log'
 
 export default defineEventHandler(async (event) => {
   try {
-    await enforceRateLimit('create', clientIdentity(event), 10, 60)
+    await enforceRateLimit('create', clientIdentity(event), 30, 60)
     const body = createRoomRequestSchema.safeParse(await readBody(event))
     if (!body.success) {
       throw new DomainError('INVALID_PAYLOAD', 'A display name is required.')

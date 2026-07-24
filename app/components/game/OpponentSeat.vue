@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ClientPlayer } from '../../../shared/types/room'
+import type { ClientPlayer } from '#shared/types/room'
 
 defineProps<{
   player: ClientPlayer

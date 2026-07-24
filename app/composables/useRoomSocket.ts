@@ -1,7 +1,7 @@
 import { ref, computed, onBeforeUnmount } from 'vue'
-import type { ClientRoomSnapshot } from '../../shared/types/room'
-import type { GameAction } from '../../shared/protocol/actions'
-import type { ServerMessage } from '../../shared/protocol/server-messages'
+import type { ClientRoomSnapshot } from '#shared/types/room'
+import type { GameAction } from '#shared/protocol/actions'
+import type { ServerMessage } from '#shared/protocol/server-messages'
 import type { StoredSession } from './useRoomSession'
 
 const HEARTBEAT_INTERVAL_MS = 20_000

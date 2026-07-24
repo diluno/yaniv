@@ -2,9 +2,17 @@ import { expect, test, type Page } from '@playwright/test'
 
 // Two browser contexts play together against the dev server.
 
+/** Fill a field until its submit button enables (guards the hydration race). */
+async function fillUntilEnabled(page: Page, label: string, value: string, button: string): Promise<void> {
+  await expect(async () => {
+    await page.getByLabel(label).fill(value)
+    await expect(page.getByRole('button', { name: button })).toBeEnabled({ timeout: 500 })
+  }).toPass({ timeout: 15_000 })
+}
+
 async function createRoom(page: Page, name: string): Promise<string> {
   await page.goto('/')
-  await page.getByLabel('Your name').fill(name)
+  await fillUntilEnabled(page, 'Your name', name, 'Create room')
   await page.getByRole('button', { name: 'Create room' }).click()
   await expect(page.getByRole('heading', { name: /^Room/ })).toBeVisible()
   const code = await page.locator('.code').innerText()
@@ -13,22 +21,27 @@ async function createRoom(page: Page, name: string): Promise<string> {
 
 async function joinRoom(page: Page, code: string, name: string): Promise<void> {
   await page.goto(`/room/${code}`)
-  await page.getByLabel('Your name').fill(name)
+  await fillUntilEnabled(page, 'Your name', name, 'Join game')
   await page.getByRole('button', { name: 'Join game' }).click()
   await expect(page.getByRole('heading', { name: /^Room/ })).toBeVisible()
 }
 
 async function playAnyTurn(page: Page): Promise<void> {
-  // Select the first card in hand, choose deck draw, submit.
-  await page.locator('.hand .card').first().click()
+  // Select the first card in hand (retry until the hand becomes interactive),
+  // choose deck draw, submit.
+  await expect(async () => {
+    const card = page.locator('.hand .card').first()
+    if (await card.getAttribute('aria-pressed') !== 'true') await card.click()
+    await expect(card).toHaveAttribute('aria-pressed', 'true', { timeout: 500 })
+  }).toPass({ timeout: 15_000 })
   await page.getByRole('button', { name: /Draw from deck/ }).click()
   await page.getByRole('button', { name: /^Discard 1/ }).click()
 }
 
 function turnOwner(alice: Page, bob: Page): Promise<Page> {
   return Promise.race([
-    alice.getByText('Your turn').waitFor().then(() => alice),
-    bob.getByText('Your turn').waitFor().then(() => bob),
+    alice.locator('.turn-message', { hasText: 'Your turn' }).waitFor().then(() => alice),
+    bob.locator('.turn-message', { hasText: 'Your turn' }).waitFor().then(() => bob),
   ])
 }
 
@@ -53,22 +66,22 @@ test('create, join, start, and play synchronized turns', async ({ browser }) => 
   // opponent hand is rendered only as a count.
   await expect(bob.locator('.cards')).toContainText('5')
 
-  // Play three turns, alternating whoever has the turn.
+  // Play three turns; after the first owner is known, turns simply alternate.
+  let current = await turnOwner(alice, bob)
   for (let i = 0; i < 3; i++) {
-    const current = await turnOwner(alice, bob)
     const other = current === alice ? bob : alice
     await playAnyTurn(current)
-    await expect(other.getByText('Your turn')).toBeVisible({ timeout: 10_000 })
+    await expect(other.locator('.turn-message', { hasText: 'Your turn' })).toBeVisible({ timeout: 10_000 })
+    current = other
   }
 
   // Draw from the previous discard endpoint once.
-  const current = await turnOwner(alice, bob)
   await current.locator('.hand .card').first().click()
   const endpoint = current.locator('.packet .pick').first()
   await endpoint.click()
   await current.getByRole('button', { name: /^Discard 1/ }).click()
   const other = current === alice ? bob : alice
-  await expect(other.getByText('Your turn')).toBeVisible({ timeout: 10_000 })
+  await expect(other.locator('.turn-message', { hasText: 'Your turn' })).toBeVisible({ timeout: 10_000 })
 
   await aliceCtx.close()
   await bobCtx.close()
@@ -110,11 +123,11 @@ test('disconnect pauses the game; reconnect resumes it', async ({ browser }) => 
   await expect(bob.getByText('Deck')).toBeVisible()
 
   await bob.close()
-  await expect(alice.getByText('Game paused')).toBeVisible({ timeout: 15_000 })
+  await expect(alice.getByRole('heading', { name: 'Game paused' })).toBeVisible({ timeout: 15_000 })
 
   const bob2 = await bobCtx.newPage()
   await bob2.goto(`/room/${code}`)
-  await expect(alice.getByText('Game paused')).toBeHidden({ timeout: 15_000 })
+  await expect(alice.getByRole('heading', { name: 'Game paused' })).toBeHidden({ timeout: 15_000 })
 
   await aliceCtx.close()
   await bobCtx.close()

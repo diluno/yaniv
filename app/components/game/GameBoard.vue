@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { ClientRoomSnapshot } from '../../../shared/types/room'
-import type { GameAction } from '../../../shared/protocol/actions'
+import type { ClientRoomSnapshot } from '#shared/types/room'
+import type { GameAction } from '#shared/protocol/actions'
 import { useCardSelection } from '../../composables/useCardSelection'
 
 const props = defineProps<{

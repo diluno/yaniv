@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ClientRoomSnapshot } from '../../../shared/types/room'
+import type { ClientRoomSnapshot } from '#shared/types/room'
 
 const props = defineProps<{
   snapshot: ClientRoomSnapshot

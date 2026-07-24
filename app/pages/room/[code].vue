@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { GameAction } from '../../../shared/protocol/actions'
+import type { GameAction } from '#shared/protocol/actions'
 import { useRoomSession, type StoredSession } from '../../composables/useRoomSession'
 import { useRoomSocket } from '../../composables/useRoomSocket'
 
@@ -8,7 +8,7 @@ const roomCode = computed(() => String(route.params.code ?? '').toUpperCase())
 const sessionStore = useRoomSession()
 
 const seat = ref<StoredSession | null>(null)
-const socket = ref<ReturnType<typeof useRoomSocket> | null>(null)
+const socket = shallowRef<ReturnType<typeof useRoomSocket> | null>(null)
 
 // Join form for visitors following a share link without a seat.
 const joinName = ref('')
@@ -141,7 +141,7 @@ const abandoned = computed(() =>
         </div>
 
         <template v-else-if="snapshot.game">
-          <GameGameBoard
+          <GameBoard
             :snapshot="snapshot"
             :is-pending="isPending"
             @action="sendAction"

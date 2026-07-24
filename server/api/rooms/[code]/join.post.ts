@@ -9,7 +9,7 @@ import { logEvent } from '../../../utils/log'
 
 export default defineEventHandler(async (event) => {
   try {
-    await enforceRateLimit('join', clientIdentity(event), 20, 60)
+    await enforceRateLimit('join', clientIdentity(event), 60, 60)
     const code = normalizeRoomCode(getRouterParam(event, 'code') ?? '')
     if (!isValidRoomCode(code)) {
       throw new DomainError('ROOM_NOT_FOUND', 'This room does not exist or has expired.')
